@@ -1,3 +1,5 @@
+-- A. Veri Sorgulama ve Raporlama
+
 create table kategori(
 id int  primary key IDENTITY(1,1),
 ad nvarchar(100) not null
@@ -56,6 +58,7 @@ foreign key (siparis_id) references siparis(id),
 foreign key (urun_id) references Urun(id)
 )
 
+-- B. Veri Ekleme ve Güncelleme 
 
 insert into kategori(ad)
 values('araba'),
@@ -95,13 +98,13 @@ values('Mercedes', 4.000000, 3, 1, 1),
 ('Tayt', 850, 300, 4, 4),
 ('Kahve Makinesi', 25000, 50, 2, 2)
 
-/* Eklediğim 'Sema' adlı müşteriyi Delete kullanarak sildim. */
+-- Eklediğim 'Sema' adlı müşteriyi Delete kullanarak sildim. 
 Delete From Musteri 
 Where ad = 'Sema'
 
   
 /* Fiyat istediğim gibi 400000 çıkmak yerine 4.00 çıktığı için (40000 yerine 4.000000 yazdığım için) 
-  update-set kullanarak düzeltme yaptım. */
+  update-set kullanarak güncelleme yaptım. */
   
 update Urun set fiyat = 400000 
 where id = 1
@@ -110,6 +113,20 @@ select * from Urun
 update Urun set fiyat = 56000 
 where id = 2
 select * from Urun
+
+-- Stok azaldığında güncelleme sorguları uygula.
+  
+CREATE TRIGGER trg_StokAzalt
+ON Siparis_Detay
+AFTER INSERT
+AS
+BEGIN
+UPDATE Urun
+SET stok = stok - inserted.adet
+FROM Urun 
+INNER JOIN inserted  ON Urun.id = inserted.urun_id;
+END;
+
 
 insert into siparis(musteri_id, tarih, toplam_tutar, odeme_turu)
 values(1, '2025-09-22', 1500, 'Kart'),
@@ -141,6 +158,37 @@ values(1, 7, 1, 1500),
 (11, 5, 1, 600),
 (12, 10, 1, 25000)
 
+/* C. Veri Sorgulama ve Raporlama */
+  
+-- En çok sipariş veren 5 müşteri
+
+select top 5 Musteri.id, Musteri.ad, count(siparis.id) as SiparisSayisi
+from Musteri 
+join Siparis on Musteri.id = Siparis.musteri_id
+group by Musteri.id, Musteri.ad
+order by count(siparis.id) desc
+
+-- En çok satılan ürünler
+
+select
+u.id as UrunID,
+u.ad as UrunAdi,
+sum(adet) as ToplamSatis
+from Siparis_Detay sd
+join Urun u  on  u.id = sd.urun_id 
+group by u.id, u.ad
+order by SUM (adet) desc 
+
+-- - En yüksek cirosu olan satıcılar.
+select 
+s.id as SaticiID,
+s.ad as SaticiAdi,
+sum(u.fiyat * sd.adet) as Ciro
+from satıcı s
+join urun u on u.satici_id = s.id
+join Siparis_Detay sd on u.id = sd.urun_id
+group by s.id, s.ad 
+order by sum(u.fiyat * sd.adet) desc
 
 
 
