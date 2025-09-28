@@ -79,7 +79,8 @@ values('Zülal','Bayer', 'zulal.bayer0614@gmail.com', 'Ankara', '2025-02-21'),
 ('Ayşegül', 'Seçir', 'aysegul@gmail.com', 'Çankırı', '2025-05-06'),
 ('Sıla Nur', 'Çorbacı', 'sılanur@gmail.com', 'Kocaeli', '2025-09-18'),
 ('Hazal','Bayer', 'hazall@gmail.com', 'Konya', '2025-07-21'),
-('Hilal', 'Bayer', 'hilal1@gmail.com', 'Ankara', '2025-05-10')
+('Hilal', 'Bayer', 'hilal1@gmail.com', 'Ankara', '2025-05-10'),
+('Sema', 'Bayer', 'sema1@gmail.com', 'Ankara', '2025-09-27')
 
 
 insert into Urun(ad, fiyat, stok, kategori_id, satici_id)
@@ -93,6 +94,10 @@ values('Mercedes', 4.000000, 3, 1, 1),
 ('Maskara', 500, 400, 5,5),
 ('Tayt', 850, 300, 4, 4),
 ('Kahve Makinesi', 25000, 50, 2, 2)
+
+/* Eklediğim 'Sema' adlı müşteriyi Delete kullanarak sildim. */
+Delete From Musteri 
+Where ad = 'Sema'
 
   
 /* Fiyat istediğim gibi 400000 çıkmak yerine 4.00 çıktığı için (40000 yerine 4.000000 yazdığım için) 
