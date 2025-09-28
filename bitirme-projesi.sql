@@ -191,4 +191,39 @@ group by s.id, s.ad
 order by sum(u.fiyat * sd.adet) desc
 
 
+-- Aggregate & Group By:
+  
+-- Şehirlere göre müşteri sayısı.
+select ad, soyad, sehir, count(id) as MüşteriSayisi
+from Musteri 
+group by sehir, ad, soyad 
+
+-- Kategori bazlı toplam satışlar.
+select ad, sum(id) as Toplam_Satislar
+from Kategori 
+group by ad 
+
+-- Aylara göre sipariş sayısı.
+select datename(month, tarih) as HangiAy,
+count(id) as Siparis_Sayisi
+from siparis 
+group by  datename(month, tarih), month(tarih) 
+order by month(tarih) asc  
+
+
+--JOIN’ler:
+-- Siparişlerde müşteri bilgisi + ürün bilgisi + satıcı bilgisi
+select
+ s.id as SiparisID,
+ m.ad as MusteriAdi,
+ u.ad as UrunAdi,
+ st.ad as SaticiAdi,
+ sd.adet
+from Siparis s
+join Musteri m on s.musteri_id = m.id 
+join Siparis_Detay sd on s.id =sd.siparis_id
+join Urun u on  sd.urun_id = u.id
+join satıcı st on u.satici_id = st.id
+
+
 
