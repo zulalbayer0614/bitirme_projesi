@@ -102,7 +102,7 @@ values('Mercedes', 4.000000, 3, 1, 1),
 Delete From Musteri 
 Where ad = 'Sema'
 
-  
+
 /* Fiyat istediğim gibi 400000 çıkmak yerine 4.00 çıktığı için (40000 yerine 4.000000 yazdığım için) 
   update-set kullanarak güncelleme yaptım. */
   
@@ -224,6 +224,42 @@ join Musteri m on s.musteri_id = m.id
 join Siparis_Detay sd on s.id =sd.siparis_id
 join Urun u on  sd.urun_id = u.id
 join satıcı st on u.satici_id = st.id
+
+  
+-- Hiç satılmamış ürünler.
+  /*  Bütün ürünler satıldığı için boş döndürecek  */
+select u.id, u.ad
+from urun u
+join Siparis_Detay sd on u.id = sd.urun_id 
+where sd.urun_id is null
+
+
+  -- Hiç sipariş vermemiş müşteriler.
+  -- Bütün herkes sipariş verdiği için(boş döndürmesini istemedim) sipariş vermemiş yeni bir müşteri ekledim. 
+insert into Musteri(ad, soyad, email, sehir, kayit_tarihi)
+values('Sema', 'Bayer', 'sema1@gmail.com', 'Ankara', '2025-09-27')
+
+/* Normalde boş döndürmesi gerekirken üstte sipariş vermemiş yeni birisini eklediğim için
+hiç sipariş vermemiş müşteri olarak sadece'Sema' adlı müşteriyi döndürecek  */
+select m.id, m.ad, s.id
+from Musteri m
+left join siparis s on m.id = s.musteri_id
+where s.id is null
+
+
+--D. İleri Seviye Görevler (Opsiyonel)
+
+-- En çok kazanç sağlayan ilk 3 kategori.
+select top 3
+k.id, k.ad,
+sum(sd.adet * sd.fiyat) as Kazanc
+from urun u
+join kategori k on k.id = u.kategori_id
+join Siparis_Detay sd on sd.urun_id = u.id
+group by k.id, k.ad
+order by Kazanc desc
+
+
 
 
 
