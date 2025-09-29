@@ -32,8 +32,8 @@ fiyat decimal(10,2) not null check (fiyat >=0),
 stok int not null,
 kategori_id int not null,
 satici_id int not null,
-foreign key (kategori_id) references kategori(id),
-foreign key (satici_id) references satıcı(id)
+foreign key (kategori_id) references kategori(id),  -- Foreign Key ile bir ürünün bir kategorisi var. (One To One)
+foreign key (satici_id) references satıcı(id)      -- Foreign Key ile bir ürün bir satıcıya ait. (One To One)
 )
 
 
@@ -44,7 +44,7 @@ musteri_id int not null,
 tarih date,
 toplam_tutar decimal(10,2) check (toplam_tutar >= 0),
 odeme_turu nvarchar(100),
-foreign key (musteri_id) references Musteri(id)
+foreign key (musteri_id) references Musteri(id)       -- Foreign Key ile bir müşterinin birden fazla sipariş verebilmesini sağlıyor. (One To Many)
 )
 
 
@@ -54,8 +54,8 @@ siparis_id int not null,
 urun_id int not null,
 adet int not null check (adet >=0),
 fiyat decimal(10,2) not null check (fiyat >= 0),
-foreign key (siparis_id) references siparis(id),
-foreign key (urun_id) references Urun(id)
+foreign key (siparis_id) references siparis(id),    
+foreign key (urun_id) references Urun(id)          ----Foreign Key ile bir siparişin birden fazla ürün içermesini sağlar. (One To Many)
 )
 
 -- B. Veri Ekleme ve Güncelleme 
@@ -116,16 +116,16 @@ select * from Urun
 
 -- Stok azaldığında güncelleme sorguları uygula.
   
-CREATE TRIGGER trg_StokAzalt
-ON Siparis_Detay
-AFTER INSERT
-AS
-BEGIN
-UPDATE Urun
-SET stok = stok - inserted.adet
-FROM Urun 
-INNER JOIN inserted  ON Urun.id = inserted.urun_id;
-END;
+create trigger trg_StokAzalt
+on Siparis_Detay
+after insert
+as
+begin
+update Urun
+set stok = stok - inserted.adet
+from Urun 
+inner join inserted  on Urun.id = inserted.urun_id;
+end;
 
 
 insert into siparis(musteri_id, tarih, toplam_tutar, odeme_turu)
