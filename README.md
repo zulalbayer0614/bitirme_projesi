@@ -1,4 +1,4 @@
-Bitirme Projesi: Online Alışveriş Platformu Veri Tabanı
+Bitirme Projesi: Online Alışveriş Platformu Veri Tabanı, 
 Hazırlayan: Zülal Bayer
 
 Nasıl Tasarladım:
