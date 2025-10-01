@@ -98,3 +98,31 @@ join kategori k on k.id = u.kategori_id
 join Siparis_Detay sd on sd.urun_id = u.id
 group by k.id, k.ad
 order by Kazanc desc
+
+
+-- Ortalama sipariş tutarını geçen siparişleri bul.
+select s.id, s.tarih, s.toplam_tutar
+from siparis s
+where s.toplam_tutar > (select avg(toplam_tutar) 
+from siparis)
+
+-- En az bir kez elektronik ürün satın alan müşteriler.
+select distinct m.id, m.ad, m.soyad, m.email
+from Musteri m
+join siparis s on m.id = s.musteri_id
+join Siparis_Detay sd on s.id = sd.siparis_id
+join Urun u on u.id = sd.urun_id
+join Kategori k on k.id = u.kategori_id
+where k.ad = 'Elektronik'
+order by m.ad
+
+
+
+
+
+
+
+
+
+
+
